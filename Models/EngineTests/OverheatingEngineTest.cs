@@ -1,5 +1,6 @@
 ﻿
 using DomainModel.Common;
+using DomainModel.EngineModels;
 using DomainModel.Responses;
 using System;
 using System.Collections.Generic;
@@ -13,10 +14,10 @@ namespace DomainModel.EngineTests
     {
         public string TestName => "Тест двигателя на перегрев";
 
-        public async Task<IResponse> StartTest(IEngine engine)
+        public async Task<IResponse> StartTest(IEngine engine, Dictionary<string, object> info)
         {
             await Task.Delay(2000);
-            return new OverheatingEngineResponse("Двигатель перегреется через 30 секунд");
+            return new OverheatingEngineResponse($"Двигатель перегреется через 30 секунд при температуре {info["Temperature"]} градусов цельсия");
         }
     }
 }

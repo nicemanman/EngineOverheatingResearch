@@ -13,6 +13,9 @@ namespace Presentation.Workflow
         {
             this.steps = steps;
         }
+
+        public bool Stop { get; set; } = false;
+
         public async Task Execute()
         {
             foreach (var step in steps)

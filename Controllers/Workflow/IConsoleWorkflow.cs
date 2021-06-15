@@ -8,6 +8,7 @@ namespace Presentation.Workflow
 {
     public interface IConsoleWorkflow
     {
+        bool Stop { get; set; }
         Task Execute();
     }
 }

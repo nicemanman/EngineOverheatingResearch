@@ -11,6 +11,6 @@ namespace DomainModel.Common
     {
         Dictionary<int, string> GetEngineKinds();
         Dictionary<int, string> GetEngineTestTypes();
-        Task<IResponse> StartEngineTest(int engineKind, int testTypeIndex);
+        Task<IResponse> StartEngineTest(int engineKind, int testTypeIndex, Dictionary<string, object> info);
     }
 }

@@ -13,31 +13,42 @@ namespace Presentation.Presenters
     public class EngineTestConsolePresenter : BasePresenter<IEngineTestConsoleView>
     {
         private readonly IEngineService engineService;
-        private int SelectedTemperature;
-        private int SelectedEngineType;
-        private int SelectedTestType;
+        private int SelectedTemperature = 0;
+        private int SelectedEngineType = 1;
+        private int SelectedTestType = 1;
+        private EngineTestConsoleViewWorkflow workflow;
         public EngineTestConsolePresenter(IApplicationController controller, IEngineTestConsoleView view, IEngineService engineService) : base(controller, view)
         {
             this.engineService = engineService;
-            View.TemperatureSelected += View_TemperatureSelected;
-            View.TestTypeSelected += View_TestTypeSelected;
-            View.EngineKindSelected += View_EngineKindSelected;
+            View.TemperatureSelected += TemperatureSelected;
+            View.TestTypeSelected += TestTypeSelected;
+            View.EngineKindSelected += EngineKindSelected;
 
             //можно добавить любое количество шагов, поменять их местами
-            var workflow = new EngineTestConsoleViewWorkflow(new List<IConsoleStep>()
+            workflow = new EngineTestConsoleViewWorkflow(new List<IConsoleStep>()
             {
                 new ConsoleStep(InvokeTemperatureInput),
                 new ConsoleStep(InvokeEngineKindInput),
                 new ConsoleStep(InvokeTestTypeInput),
                 new ConsoleStep(InvokeStartTest)
             });
-            workflow.Execute().Wait();
+            while (!workflow.Stop)
+                workflow.Execute().Wait();
         }
 
-        private void View_EngineKindSelected(int obj)
+        private void EngineKindSelected(int obj)
         {
             SelectedEngineType = obj;
         }
+        private void TestTypeSelected(int obj)
+        {
+            SelectedTestType = obj;
+        }
+        private void TemperatureSelected(int obj)
+        {
+            SelectedTemperature = obj;
+        }
+
         private Task InvokeTestTypeInput() 
         {
             var testTypes = engineService.GetEngineTestTypes();
@@ -56,14 +67,14 @@ namespace Presentation.Presenters
             View.InvokeTemperatureInput();
             return Task.CompletedTask;
         }
-        private void View_TestTypeSelected(int obj)
-        {
-            SelectedTestType = obj;
-        }
+        
         private async Task InvokeStartTest() 
         {
             View.ShowMessage("Ожидайте выполнения теста");
-            var response = await engineService.StartEngineTest(SelectedEngineType, SelectedTestType);
+            var response = await engineService.StartEngineTest(SelectedEngineType, SelectedTestType, new Dictionary<string, object>() 
+            {
+                { "Temperature" , SelectedTemperature}
+            });
             if (response.IsValid)
             {
                 View.ShowMessage(response.TestResult);
@@ -76,10 +87,7 @@ namespace Presentation.Presenters
                 }
             }
         }
-        private void View_TemperatureSelected(int obj)
-        {
-            SelectedTemperature = obj;
-        }
+        
         private Task InvokeEngineKindInput() 
         {
             var engineKinds = engineService.GetEngineKinds();
@@ -92,6 +100,6 @@ namespace Presentation.Presenters
             View.InvokeEngineKindInput();
             return Task.CompletedTask;
         }
-
+        
     }
 }
