@@ -11,5 +11,6 @@ namespace DomainModel.Responses
         bool IsValid { get; }
         ValidationResult ValidationResult { get; }
         string TestResult { get; }
+        Dictionary<string, object> Info { get; }
     }
 }

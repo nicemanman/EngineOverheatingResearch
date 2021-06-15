@@ -1,4 +1,5 @@
-﻿using DomainModel.Responses;
+﻿using DomainModel.Requests;
+using DomainModel.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,6 @@ namespace DomainModel.Common
     {
         Dictionary<int, string> GetEngineKinds();
         Dictionary<int, string> GetEngineTestTypes();
-        Task<IResponse> StartEngineTest(int engineKind, int testTypeIndex, Dictionary<string, object> info);
+        Task<IResponse> StartEngineTest(IRequest request);
     }
 }

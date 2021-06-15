@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DomainModel.Requests;
 
 namespace DomainModel.ServicesImpl
 {
@@ -34,11 +35,19 @@ namespace DomainModel.ServicesImpl
             }
         }
 
+        /// <summary>
+        /// Типы двигателей, которые поддерживает стенд
+        /// </summary>
+        /// <returns></returns>
         public Dictionary<int, string> GetEngineKinds()
         {
             return engineKindsForClient;
         }
 
+        /// <summary>
+        /// Типы тестов, которые поддерживает стенд
+        /// </summary>
+        /// <returns></returns>
         public Dictionary<int, string> GetEngineTestTypes()
         {
             return engineTestTypesForClient;
@@ -51,14 +60,15 @@ namespace DomainModel.ServicesImpl
         /// <param name="testTypeIndex">Номер типа теста</param>
         /// <param name="info">Дополнительные параметры тесте</param>
         /// <returns></returns>
-        public async Task<IResponse> StartEngineTest(int engineKind, int testTypeIndex, Dictionary<string, object> info)
+        public async Task<IResponse> StartEngineTest(IRequest request)
         {
-            engineKinds.TryGetValue((EngineKinds)engineKind, out var engine);
-            if (engine == null) return new BaseResponse(new ValidationResult("Выбранного вида двигателя не существует!"));
+            
+            engineKinds.TryGetValue((EngineKinds)request.EngineTypeKind, out var engine);
+            if (engine == null) return new Response(new ValidationResult("Выбранного вида двигателя не существует!"));
                
-            testTypes.TryGetValue((EngineTestsTypes)testTypeIndex, out var test);
-            if (test == null) return new BaseResponse(new ValidationResult("Выбранного вида теста не существует!"));
-            return await test.StartTest(engine, info);
+            testTypes.TryGetValue((EngineTestsTypes)request.TestTypeIndex, out var test);
+            if (test == null) return new Response(new ValidationResult("Выбранного вида теста не существует!"));
+            return await test.StartTest(engine, request.Info);
         }
     }
 }

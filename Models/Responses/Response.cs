@@ -6,18 +6,18 @@ using System.Threading.Tasks;
 
 namespace DomainModel.Responses
 {
-    public class BaseResponse : IResponse
+    public class Response : IResponse
     {
-        public BaseResponse(string testResult, ValidationResult result)
+        public Response(string testResult, ValidationResult result)
         {
             this.TestResult = testResult;
             ValidationResult = result;
         }
-        public BaseResponse(string testResult)
+        public Response(string testResult)
         {
             this.TestResult = testResult;
         }
-        public BaseResponse(ValidationResult result)
+        public Response(ValidationResult result)
         {
             ValidationResult = result;
         }
@@ -25,5 +25,7 @@ namespace DomainModel.Responses
         public ValidationResult ValidationResult { get; }
 
         public string TestResult { get; }
+
+        public Dictionary<string, object> Info { get; set; }
     }
 }

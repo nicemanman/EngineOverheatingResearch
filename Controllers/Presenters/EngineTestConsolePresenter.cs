@@ -1,4 +1,5 @@
 ﻿using DomainModel.Common;
+using DomainModel.Requests;
 using Presentation.Common;
 using Presentation.Views;
 using Presentation.Workflow;
@@ -71,9 +72,14 @@ namespace Presentation.Presenters
         private async Task InvokeStartTest() 
         {
             View.ShowMessage("Ожидайте выполнения теста");
-            var response = await engineService.StartEngineTest(SelectedEngineType, SelectedTestType, new Dictionary<string, object>() 
+            var response = await engineService.StartEngineTest(new Request() 
             {
-                { "Temperature" , SelectedTemperature}
+                Info = new Dictionary<string, object>()
+                {
+                    { "Temperature" , SelectedTemperature}
+                },
+                TestTypeIndex = SelectedTestType,
+                EngineTypeKind = SelectedEngineType
             });
             if (response.IsValid)
             {
