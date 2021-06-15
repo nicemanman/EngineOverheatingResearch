@@ -15,7 +15,7 @@ namespace DomainModel.EngineTests
 
         public async Task<IResponse> StartTest(IEngine engine)
         {
-            await Task.Delay(1000);
+            await Task.Delay(2000);
             return new OverheatingEngineResponse("Двигатель перегреется через 30 секунд");
         }
     }

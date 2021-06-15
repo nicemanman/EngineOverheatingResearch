@@ -22,7 +22,7 @@ namespace UI
             return input;
         }
 
-        public abstract void Show();
+        public virtual void Show() { }
 
         public void ShowError(string errorMessage)
         {

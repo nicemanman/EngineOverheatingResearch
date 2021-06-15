@@ -90,9 +90,5 @@ namespace UI
             }
         }
 
-        public override void Show()
-        {
-            
-        }
     }
 }

@@ -22,6 +22,8 @@ namespace Presentation.Presenters
             View.TemperatureSelected += View_TemperatureSelected;
             View.TestTypeSelected += View_TestTypeSelected;
             View.EngineKindSelected += View_EngineKindSelected;
+
+            //можно добавить любое количество шагов, поменять их местами
             var workflow = new EngineTestConsoleViewWorkflow(new List<IConsoleStep>()
             {
                 new ConsoleStep(InvokeTemperatureInput),
