@@ -12,6 +12,7 @@ namespace DomainModel.EngineTests
     public interface IEngineTest
     {
         string TestName { get; }
+        List<string> RequiredFields { get; set; }
         Task<IResponse> StartTest(IEngine engine, Dictionary<string, object> info);
     }
 }

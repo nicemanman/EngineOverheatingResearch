@@ -9,6 +9,8 @@ namespace DomainModel.EngineModels
     public interface IEngine
     {
         string TypeName { get; }
-        Task Start();
+        double SecondsUptime { get; }
+        IAsyncEnumerable<IEngine> Start();
+        void Stop();
     }
 }

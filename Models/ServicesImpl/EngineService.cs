@@ -26,6 +26,7 @@ namespace DomainModel.ServicesImpl
             {
                 engineKindsForClient.Add(index, engine.TypeName);
             }
+            
             //Можно добавить любое количество типов тестов
             testTypes.Add(EngineTestsTypes.Overheating, new OverheatingEngineTest());
             index = 1;
@@ -62,13 +63,21 @@ namespace DomainModel.ServicesImpl
         /// <returns></returns>
         public async Task<IResponse> StartEngineTest(IRequest request)
         {
-            
             engineKinds.TryGetValue((EngineKinds)request.EngineTypeKind, out var engine);
             if (engine == null) return new Response(new ValidationResult("Выбранного вида двигателя не существует!"));
                
             testTypes.TryGetValue((EngineTestsTypes)request.TestTypeIndex, out var test);
             if (test == null) return new Response(new ValidationResult("Выбранного вида теста не существует!"));
             return await test.StartTest(engine, request.Info);
+        }
+        public Task<IResponse> GetRequiredFieldsForTestAndEngine(IRequest request) 
+        {
+            engineKinds.TryGetValue((EngineKinds)request.EngineTypeKind, out var engine);
+            if (engine == null) return Task.FromResult<IResponse>(new Response(new ValidationResult("Выбранного вида двигателя не существует!")));
+
+            testTypes.TryGetValue((EngineTestsTypes)request.TestTypeIndex, out var test);
+            if (test == null) return Task.FromResult<IResponse>(new Response(new ValidationResult("Выбранного вида теста не существует!")));
+            return Task.FromResult<IResponse>(new Response(String.Join(',', test.RequiredFields)));
         }
     }
 }

@@ -13,33 +13,35 @@ namespace UI
         public void Close(IConsoleView nextView)
         {
             Console.Clear();
-            
         }
 
-        public string InvokeUserInput()
+        public virtual void Show() 
         {
-            string input = Console.ReadLine();
-            return input;
+            Console.ForegroundColor = ConsoleColor.Gray;
         }
-
-        public virtual void Show() { }
 
         public void ShowError(string errorMessage)
         {
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine();
-            Console.WriteLine(errorMessage);
+            Console.WriteLine("Ошибка: "+errorMessage);
+            Console.ForegroundColor = ConsoleColor.Gray;
         }
 
         public void ShowError(Exception ex)
         {
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine();
-            Console.WriteLine(ex.StackTrace);
+            Console.WriteLine("Исключение:\n"+ex.StackTrace);
+            Console.ForegroundColor = ConsoleColor.Gray;
         }
 
         public void ShowMessage(string message)
         {
+            Console.ForegroundColor = ConsoleColor.Gray;
             Console.WriteLine();
             Console.WriteLine(message);
+            Console.ForegroundColor = ConsoleColor.Gray;
         }
 
         

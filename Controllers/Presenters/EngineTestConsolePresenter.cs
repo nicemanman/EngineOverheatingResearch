@@ -14,7 +14,7 @@ namespace Presentation.Presenters
     public class EngineTestConsolePresenter : BasePresenter<IEngineTestConsoleView>
     {
         private readonly IEngineService engineService;
-        private int SelectedTemperature = 0;
+        private double SelectedTemperature = 0;
         private int SelectedEngineType = 1;
         private int SelectedTestType = 1;
         private EngineTestConsoleViewWorkflow workflow;
@@ -45,7 +45,7 @@ namespace Presentation.Presenters
         {
             SelectedTestType = obj;
         }
-        private void TemperatureSelected(int obj)
+        private void TemperatureSelected(double obj)
         {
             SelectedTemperature = obj;
         }

@@ -10,6 +10,7 @@ namespace UI
         static void Main(string[] args)
         {
             var controller = ApplicationController.Current;
+            Console.ForegroundColor = ConsoleColor.Gray;
             controller.RegisterView<IEngineTestConsoleView, EngineTestView>();
             controller.Run<EngineTestConsolePresenter>();
         }

@@ -11,7 +11,7 @@ namespace UI
 {
     public class EngineTestView : BaseScreen, IEngineTestConsoleView
     {
-        public event Action<int> TemperatureSelected;
+        public event Action<double> TemperatureSelected;
         public event Action<int> EngineKindSelected;
         public event Action<int> TestTypeSelected;
 
@@ -43,13 +43,13 @@ namespace UI
         public void InvokeTemperatureInput()
         {
             bool temperatureSelected = false;
-            int temperatureValue = 0;
+            double temperatureValue = 0;
             while (!temperatureSelected)
             {
                 Console.WriteLine();
                 Console.WriteLine("Введите температуру окружающей среды:");
                 string temperature = Console.ReadLine();
-                if (!int.TryParse(temperature, out var integerTemperature))
+                if (!double.TryParse(temperature, out var integerTemperature))
                 {
                     Console.WriteLine("Введена некорректная температура окружающей среды, попробуйте еще раз");
                 }

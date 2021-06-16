@@ -9,4 +9,8 @@
     <RootNamespace>DomainModel</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Helpers\" />
+  </ItemGroup>
+
 </Project>
