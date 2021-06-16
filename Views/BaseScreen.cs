@@ -59,6 +59,12 @@ namespace UI
             Console.ForegroundColor = ConsoleColor.Gray;
         }
 
-        
+        public void ShowSuccessMessage(string message)
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine();
+            Console.WriteLine(message);
+            Console.ForegroundColor = ConsoleColor.Gray;
+        }
     }
 }

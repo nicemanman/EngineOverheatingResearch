@@ -17,11 +17,15 @@ namespace DomainModel.EngineTests
         //Можно добавить любое количество параметров к тесту, которые будут переданы с клиента
         public Dictionary<string, object> RequiredFields { get; set; } = new Dictionary<string, object>()
         {
-            { "Temperature", "Температура окружающей среды" },
-            { "SecondsToTest", "Длительность тестирования" }
+            { "Temperature", "Температура окружающей среды (градусов цельсия)" },
+            { "SecondsToTest", "Длительность тестирования (секунд)" }
         };
 
-        private const double ABSOLUTE_ERROR = 0.1;
+      
+
+        /// <summary>
+        /// Длительность тестирования
+        /// </summary>
         private const double MAX_TIME = 1800;
         public async Task<IResponse> StartTest(IEngine engine, Dictionary<string, object> info)
         {
@@ -29,21 +33,25 @@ namespace DomainModel.EngineTests
             {
                 return new Response($"Данный двигатель не может перегреться в принципе");
             }
-            if (double.TryParse(info["Temperature"].ToString(), out var temperature))
+            if (double.TryParse(info["Temperature"].ToString(), out var temperature)) 
+            {
                 ((IEngineMayOverheat)engine).AmbientTemperature = temperature;
+            }
             else 
             {
                 return new Response(new ValidationResult("Ошибка валидации параметра - Температура окружающей среды"));
             }
-
-            await foreach (IEngineMayOverheat engineState in engine.Start()) 
+            engine.Stop();
+            //Запускаем двигатель и следим за ним пока он не перегреется, либо пока не закончится время теста
+            foreach (IEngineMayOverheat engineState in engine.Start()) 
             {
                 if (engine.SecondsUptime < MAX_TIME)
                 {
                     if (engineState.IsOverheat) 
                     {
+                        var time = engine.SecondsUptime;
                         engine.Stop();
-                        return new Response($"Двигатель перегреется через {engineState.SecondsToOverheat} секунд при температуре окружающей среды {info["Temperature"]} градусов цельсия");
+                        return new Response($"Двигатель перегреется через {time} с. при температуре окружающей среды {info["Temperature"]} градусов цельсия");
                     }
                 }
                 else
@@ -52,8 +60,6 @@ namespace DomainModel.EngineTests
                     return new Response($"Двигатель не перегреется");
                 }
             }
-
-            //Запускаем двигатель и следим за ним пока он не перегреется, либо пока не закончится время теста
             return new Response(new ValidationResult("Произошел сбой двигателя"));
         }
     }

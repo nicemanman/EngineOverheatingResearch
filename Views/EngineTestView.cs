@@ -40,31 +40,6 @@ namespace UI
             }
         }
 
-        public void InvokeTemperatureInput()
-        {
-            bool temperatureSelected = false;
-            double temperatureValue = 0;
-            while (!temperatureSelected)
-            {
-                Console.WriteLine();
-                Console.WriteLine("Введите температуру окружающей среды:");
-                string temperature = Console.ReadLine();
-                if (!double.TryParse(temperature, out var integerTemperature))
-                {
-                    Console.WriteLine("Введена некорректная температура окружающей среды, попробуйте еще раз");
-                }
-                else
-                {
-                    temperatureSelected = true;
-                    temperatureValue = integerTemperature;
-                }
-            }
-            if (temperatureSelected)
-            {
-                TemperatureSelected?.Invoke(temperatureValue);
-            }
-        }
-
         public void InvokeTestTypeInput()
         {
             bool testTypeSelected = false;

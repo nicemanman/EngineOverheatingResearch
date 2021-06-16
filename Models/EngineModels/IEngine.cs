@@ -10,7 +10,7 @@ namespace DomainModel.EngineModels
     {
         string TypeName { get; }
         double SecondsUptime { get; }
-        IAsyncEnumerable<IEngine> Start();
+        IEnumerable<IEngine> Start();
         void Stop();
     }
 }

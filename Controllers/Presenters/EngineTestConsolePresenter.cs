@@ -52,10 +52,7 @@ namespace Presentation.Presenters
         {
             SelectedTestType = obj;
         }
-        private void TemperatureSelected(double obj)
-        {
-            SelectedTemperature = obj;
-        }
+        
 
         private Task InvokeTestTypeInput() 
         {
@@ -93,13 +90,6 @@ namespace Presentation.Presenters
             View.InvokeInput(parameters.Info.Keys.ToList());
         }
 
-
-        private Task InvokeTemperatureInput() 
-        {
-            View.InvokeTemperatureInput();
-            return Task.CompletedTask;
-        }
-        
         private async Task InvokeStartTest() 
         {
             View.ShowMessage("Ожидайте выполнения теста");
@@ -111,7 +101,7 @@ namespace Presentation.Presenters
             });
             if (response.IsValid)
             {
-                View.ShowMessage(response.TestResult);
+                View.ShowSuccessMessage(response.TestResult);
             }
             else
             {

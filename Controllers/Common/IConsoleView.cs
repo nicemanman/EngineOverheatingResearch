@@ -12,6 +12,7 @@ namespace Presentation.Common
         void Show();
         void Close(IConsoleView nextView);
         void ShowMessage(string message);
+        void ShowSuccessMessage(string message);
         void ShowError(string errorMessage);
         void ShowError(Exception ex);
         void InvokeInput(List<string> list);
