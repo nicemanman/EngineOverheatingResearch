@@ -19,13 +19,11 @@ namespace UI
 
         public void InvokeInput(List<string> parametersNames)
         {
-            var parametersString = Console.ReadLine();
-            var parametersValues = parametersString.Split(',').ToList();
             var dict = new Dictionary<string, object>();
-            if (parametersNames.Count != parametersValues.Count) throw new Exception("Ошибка при вводе аргументов");
-            for (int i = 0; i < parametersNames.Count(); i++) 
+            foreach (var name in parametersNames)
             {
-                dict.Add(parametersNames[i], parametersValues[i]);
+                var value = Console.ReadLine();
+                dict.Add(name, value);
             }
             ParametersSelected?.Invoke(dict);
         }

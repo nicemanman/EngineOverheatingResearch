@@ -74,7 +74,7 @@ namespace Presentation.Presenters
                 TestTypeIndex = SelectedTestType,
                 EngineTypeKind = SelectedEngineType
             });
-            View.ShowMessage("Введите параметры через запятую: ");
+            View.ShowMessage("Введите параметры (каждый параметр с новой строчки):");
             if (!parameters.IsValid) 
             {
                 ShowErrors(parameters.ValidationResult);
