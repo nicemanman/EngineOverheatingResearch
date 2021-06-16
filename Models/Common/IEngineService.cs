@@ -13,5 +13,6 @@ namespace DomainModel.Common
         Dictionary<int, string> GetEngineKinds();
         Dictionary<int, string> GetEngineTestTypes();
         Task<IResponse> StartEngineTest(IRequest request);
+        Task<IResponse> GetRequiredFieldsForTestAndEngine(IRequest request);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using DomainModel.Common;
 using DomainModel.Requests;
+using DomainModel.Responses;
 using Presentation.Common;
 using Presentation.Views;
 using Presentation.Workflow;
@@ -14,6 +15,7 @@ namespace Presentation.Presenters
     public class EngineTestConsolePresenter : BasePresenter<IEngineTestConsoleView>
     {
         private readonly IEngineService engineService;
+        private Dictionary<string, object> Info = new Dictionary<string, object>();
         private double SelectedTemperature = 0;
         private int SelectedEngineType = 1;
         private int SelectedTestType = 1;
@@ -21,20 +23,25 @@ namespace Presentation.Presenters
         public EngineTestConsolePresenter(IApplicationController controller, IEngineTestConsoleView view, IEngineService engineService) : base(controller, view)
         {
             this.engineService = engineService;
-            View.TemperatureSelected += TemperatureSelected;
+            
             View.TestTypeSelected += TestTypeSelected;
             View.EngineKindSelected += EngineKindSelected;
-
+            View.ParametersSelected += View_ParametersSelected1;
             //можно добавить любое количество шагов, поменять их местами
             workflow = new EngineTestConsoleViewWorkflow(new List<IConsoleStep>()
             {
-                new ConsoleStep(InvokeTemperatureInput),
                 new ConsoleStep(InvokeEngineKindInput),
                 new ConsoleStep(InvokeTestTypeInput),
+                new ConsoleStep(InvokeParametersInput),
                 new ConsoleStep(InvokeStartTest)
             });
             while (!workflow.Stop)
                 workflow.Execute().Wait();
+        }
+
+        private void View_ParametersSelected1(Dictionary<string, object> obj)
+        {
+            Info = obj;
         }
 
         private void EngineKindSelected(int obj)
@@ -63,6 +70,30 @@ namespace Presentation.Presenters
             return Task.CompletedTask;
         }
 
+        private async Task InvokeParametersInput()
+        {
+            var parameters = await engineService.GetRequiredFieldsForTestAndEngine(new Request()
+            {
+                TestTypeIndex = SelectedTestType,
+                EngineTypeKind = SelectedEngineType
+            });
+            View.ShowMessage("Введите параметры через запятую: ");
+            if (!parameters.IsValid) 
+            {
+                ShowErrors(parameters.ValidationResult);
+                return;
+            }
+            var index = 1;
+            foreach (var parameter in parameters.Info.Keys)
+            {
+                var paramName = parameters.Info[parameter];
+                View.ShowMessage($"{index}.{paramName}");
+                index++;
+            }
+            View.InvokeInput(parameters.Info.Keys.ToList());
+        }
+
+
         private Task InvokeTemperatureInput() 
         {
             View.InvokeTemperatureInput();
@@ -74,10 +105,7 @@ namespace Presentation.Presenters
             View.ShowMessage("Ожидайте выполнения теста");
             var response = await engineService.StartEngineTest(new Request() 
             {
-                Info = new Dictionary<string, object>()
-                {
-                    { "Temperature" , SelectedTemperature}
-                },
+                Info = Info,
                 TestTypeIndex = SelectedTestType,
                 EngineTypeKind = SelectedEngineType
             });
@@ -93,7 +121,13 @@ namespace Presentation.Presenters
                 }
             }
         }
-        
+        private void ShowErrors(ValidationResult result) 
+        {
+            foreach (var message in result.Messages)
+            {
+                View.ShowError(message);
+            }
+        }
         private Task InvokeEngineKindInput() 
         {
             var engineKinds = engineService.GetEngineKinds();

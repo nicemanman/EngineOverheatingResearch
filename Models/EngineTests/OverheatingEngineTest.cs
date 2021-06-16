@@ -14,9 +14,11 @@ namespace DomainModel.EngineTests
     {
         public string TestName => "Тест двигателя на перегрев";
 
-        public List<string> RequiredFields { get; set; } = new List<string>()
+        //Можно добавить любое количество параметров к тесту, которые будут переданы с клиента
+        public Dictionary<string, object> RequiredFields { get; set; } = new Dictionary<string, object>()
         {
-            "Temperature"
+            { "Temperature", "Температура окружающей среды" },
+            { "SecondsToTest", "Длительность тестирования" }
         };
 
         private const double ABSOLUTE_ERROR = 0.1;
@@ -27,7 +29,12 @@ namespace DomainModel.EngineTests
             {
                 return new Response($"Данный двигатель не может перегреться в принципе");
             }
-            ((IEngineMayOverheat)engine).AmbientTemperature = (double)info["Temperature"];
+            if (double.TryParse(info["Temperature"].ToString(), out var temperature))
+                ((IEngineMayOverheat)engine).AmbientTemperature = temperature;
+            else 
+            {
+                return new Response(new ValidationResult("Ошибка валидации параметра - Температура окружающей среды"));
+            }
 
             await foreach (IEngineMayOverheat engineState in engine.Start()) 
             {

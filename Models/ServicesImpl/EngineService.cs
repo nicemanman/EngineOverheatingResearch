@@ -70,14 +70,17 @@ namespace DomainModel.ServicesImpl
             if (test == null) return new Response(new ValidationResult("Выбранного вида теста не существует!"));
             return await test.StartTest(engine, request.Info);
         }
-        public Task<IResponse> GetRequiredFieldsForTestAndEngine(IRequest request) 
+        public Task<IResponse> GetRequiredFieldsForTestAndEngine(IRequest request)
         {
             engineKinds.TryGetValue((EngineKinds)request.EngineTypeKind, out var engine);
             if (engine == null) return Task.FromResult<IResponse>(new Response(new ValidationResult("Выбранного вида двигателя не существует!")));
 
             testTypes.TryGetValue((EngineTestsTypes)request.TestTypeIndex, out var test);
             if (test == null) return Task.FromResult<IResponse>(new Response(new ValidationResult("Выбранного вида теста не существует!")));
-            return Task.FromResult<IResponse>(new Response(String.Join(',', test.RequiredFields)));
+            return Task.FromResult<IResponse>(new Response("Параметры которые необходимы для теста") 
+            {
+                Info = test.RequiredFields
+            });
         }
     }
 }

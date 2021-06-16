@@ -10,9 +10,24 @@ namespace UI
 {
     public abstract class BaseScreen : IConsoleView
     {
+        public event Action<Dictionary<string, object>> ParametersSelected;
+
         public void Close(IConsoleView nextView)
         {
             Console.Clear();
+        }
+
+        public void InvokeInput(List<string> parametersNames)
+        {
+            var parametersString = Console.ReadLine();
+            var parametersValues = parametersString.Split(',').ToList();
+            var dict = new Dictionary<string, object>();
+            if (parametersNames.Count != parametersValues.Count) throw new Exception("Ошибка при вводе аргументов");
+            for (int i = 0; i < parametersNames.Count(); i++) 
+            {
+                dict.Add(parametersNames[i], parametersValues[i]);
+            }
+            ParametersSelected?.Invoke(dict);
         }
 
         public virtual void Show() 
