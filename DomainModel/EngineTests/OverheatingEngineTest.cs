@@ -14,19 +14,22 @@ namespace DomainModel.EngineTests
     {
         public string Name => "Тест двигателя на перегрев";
 
+        /// <summary>
+        /// Длительность тестирования
+        /// </summary>
+        private static int SecondsToTest = 1800;
+
+
         //Можно добавить любое количество параметров к тесту, которые будут переданы с клиента
         public Dictionary<string, object> RequiredFields { get; set; } = new Dictionary<string, object>()
         {
             { "Temperature", "Температура окружающей среды (градусов цельсия)" },
-            { "SecondsToTest", $"Длительность тестирования (секунд, при невалидном значении - {MAX_TIME} с.)" }
+            { "SecondsToTest", $"Длительность тестирования (секунд, при невалидном значении - {SecondsToTest} с.)" }
         };
 
       
 
-        /// <summary>
-        /// Длительность тестирования
-        /// </summary>
-        private const double MAX_TIME = 1800;
+        
         public Task<IResponse> StartTest(IEngine engine, Dictionary<string, object> info)
         {
             if (!(engine is IEngineMayOverheat)) 
@@ -41,11 +44,15 @@ namespace DomainModel.EngineTests
             {
                 return Task.FromResult<IResponse>(new Response(new ValidationResult("Ошибка валидации параметра - Температура окружающей среды")));
             }
+            if (int.TryParse(info["SecondsToTest"].ToString(), out var secondsToTest))
+            {
+                SecondsToTest = secondsToTest;
+            }
             engine.Stop();
             //Запускаем двигатель и следим за ним пока он не перегреется, либо пока не закончится время теста
             foreach (IEngineMayOverheat engineState in engine.Start()) 
             {
-                if (engine.SecondsUptime < MAX_TIME)
+                if (engine.SecondsUptime < SecondsToTest)
                 {
                     if (engineState.IsOverheat) 
                     {
