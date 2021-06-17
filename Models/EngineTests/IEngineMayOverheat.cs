@@ -13,7 +13,6 @@ namespace DomainModel.EngineTests
     public interface IEngineMayOverheat
     {
         bool IsOverheat { get; }
-        double SecondsToOverheat { get; }
         double AmbientTemperature { get; set; }
     }
 }

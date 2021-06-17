@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DomainModel.Requests;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,11 +22,16 @@ namespace DomainModel.Responses
         {
             ValidationResult = result;
         }
+        public Response()
+        {
+
+        }
         public bool IsValid => ValidationResult == null;
         public ValidationResult ValidationResult { get; }
 
         public string TestResult { get; }
 
         public Dictionary<string, object> Info { get; set; }
+
     }
 }

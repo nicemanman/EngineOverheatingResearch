@@ -8,7 +8,7 @@ namespace DomainModel.EngineModels
 {
     public interface IEngine
     {
-        string TypeName { get; }
+        string Name { get; }
         double SecondsUptime { get; }
         IEnumerable<IEngine> Start();
         void Stop();

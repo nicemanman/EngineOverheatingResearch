@@ -11,6 +11,12 @@ using DomainModel.Requests;
 
 namespace DomainModel.ServicesImpl
 {
+    /// <summary>
+    /// Можно было бы в принципе разделить данный сервис на два сервиса
+    /// 1. Сервис для работы с двигателями
+    /// 2. Сервис для работы с тестами
+    /// Но в рамках данной задачи я решил что этого не требуется.
+    /// </summary>
     public class EngineService : IEngineService
     {
         private Dictionary<EngineKinds, IEngine> engineKinds = new Dictionary<EngineKinds, IEngine>();
@@ -24,7 +30,7 @@ namespace DomainModel.ServicesImpl
             int index = 1;
             foreach (var engine in engineKinds.Values)
             {
-                engineKindsForClient.Add(index, engine.TypeName);
+                engineKindsForClient.Add(index, engine.Name);
             }
             
             //Можно добавить любое количество типов тестов
@@ -32,7 +38,7 @@ namespace DomainModel.ServicesImpl
             index = 1;
             foreach (var testType in testTypes.Values)
             {
-                engineTestTypesForClient.Add(index, testType.TestName);
+                engineTestTypesForClient.Add(index, testType.Name);
             }
         }
 
@@ -82,5 +88,6 @@ namespace DomainModel.ServicesImpl
                 Info = test.RequiredFields
             });
         }
+
     }
 }

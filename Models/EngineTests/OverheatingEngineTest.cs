@@ -12,13 +12,13 @@ namespace DomainModel.EngineTests
 {
     public class OverheatingEngineTest : IEngineTest
     {
-        public string TestName => "Тест двигателя на перегрев";
+        public string Name => "Тест двигателя на перегрев";
 
         //Можно добавить любое количество параметров к тесту, которые будут переданы с клиента
         public Dictionary<string, object> RequiredFields { get; set; } = new Dictionary<string, object>()
         {
             { "Temperature", "Температура окружающей среды (градусов цельсия)" },
-            { "SecondsToTest", "Длительность тестирования (секунд)" }
+            { "SecondsToTest", $"Длительность тестирования (секунд, при невалидном значении - {MAX_TIME} с.)" }
         };
 
       
@@ -27,11 +27,11 @@ namespace DomainModel.EngineTests
         /// Длительность тестирования
         /// </summary>
         private const double MAX_TIME = 1800;
-        public async Task<IResponse> StartTest(IEngine engine, Dictionary<string, object> info)
+        public Task<IResponse> StartTest(IEngine engine, Dictionary<string, object> info)
         {
             if (!(engine is IEngineMayOverheat)) 
             {
-                return new Response($"Данный двигатель не может перегреться в принципе");
+                return Task.FromResult<IResponse>(new Response($"Данный двигатель не может перегреться в принципе"));
             }
             if (double.TryParse(info["Temperature"].ToString(), out var temperature)) 
             {
@@ -39,7 +39,7 @@ namespace DomainModel.EngineTests
             }
             else 
             {
-                return new Response(new ValidationResult("Ошибка валидации параметра - Температура окружающей среды"));
+                return Task.FromResult<IResponse>(new Response(new ValidationResult("Ошибка валидации параметра - Температура окружающей среды")));
             }
             engine.Stop();
             //Запускаем двигатель и следим за ним пока он не перегреется, либо пока не закончится время теста
@@ -51,16 +51,16 @@ namespace DomainModel.EngineTests
                     {
                         var time = engine.SecondsUptime;
                         engine.Stop();
-                        return new Response($"Двигатель перегреется через {time} с. при температуре окружающей среды {info["Temperature"]} градусов цельсия");
+                        return Task.FromResult<IResponse>(new Response($"Двигатель перегреется через {time} с. при температуре окружающей среды {info["Temperature"]} градусов цельсия"));
                     }
                 }
                 else
                 {
                     engine.Stop();
-                    return new Response($"Двигатель не перегреется");
+                    return Task.FromResult<IResponse>(new Response($"Двигатель не перегреется"));
                 }
             }
-            return new Response(new ValidationResult("Произошел сбой двигателя"));
+            return Task.FromResult<IResponse>(new Response(new ValidationResult("Произошел сбой двигателя")));
         }
     }
 }

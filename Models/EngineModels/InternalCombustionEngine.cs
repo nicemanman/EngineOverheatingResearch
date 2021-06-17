@@ -13,11 +13,10 @@ namespace DomainModel.EngineModels
     /// </summary>
     public class InternalCombustionEngine : IEngine, IEngineMayOverheat
     {
-        public string TypeName => "Двигатель внутреннего сгорания";
+        public string Name => "Двигатель внутреннего сгорания";
         private bool IsRunning = false;
 
         public bool IsOverheat { get => T_Engine > T_Overheating;}
-        public double SecondsToOverheat { get; }
         public double AmbientTemperature { get; set; }
 
 
